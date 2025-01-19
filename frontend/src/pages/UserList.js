@@ -12,6 +12,9 @@ const UserList = () => {
   const [postsPerPage, setPostsPerPage] = useState(8)
   const [buttonPopup, setPopup] = useState(false);
 
+  let lastPostIndex = currentPage * postsPerPage;
+  let firstPostIndex = lastPostIndex - postsPerPage;
+
   useEffect(() => {
     const fetchUsers = async () => {
       const { data } = await getUsers();
@@ -40,10 +43,6 @@ const UserList = () => {
     }
   }
 
-  const lastPostIndex = currentPage * postsPerPage;
-  const firstPostIndex = lastPostIndex - postsPerPage;
-  const currentUsers = users.slice(firstPostIndex, lastPostIndex)
-
   return (
     <div class={'outer'}>
       <h2>Lista de Usuários</h2>
@@ -57,7 +56,7 @@ const UserList = () => {
             <th>E-mail</th>
             <th>Ações</th>
           </tr>
-          {currentUsers.map((user) => (
+          {users.slice(firstPostIndex, lastPostIndex).map((user) => (
             <tr>
               <td class={"id"}>{user._id}</td>
               <td>{user.name}</td>
@@ -74,7 +73,7 @@ const UserList = () => {
             </div>
             <div class={"pagination"}>
               <Pagination 
-                totalPosts={users.length} 
+                posts={users} 
                 postsPerPage={postsPerPage} 
                 currentPage={currentPage}
                 setCurrentPage={setCurrentPage}
